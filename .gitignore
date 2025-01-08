@@ -21,3 +21,4 @@ broadcast/
 zkout/
 foundryup-zksync
 .gas-snapshot
+test.md
