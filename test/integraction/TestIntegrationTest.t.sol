@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.18;
+pragma solidity ^0.8.28;
 
 import {Test, console} from "forge-std/Test.sol";
 import {FundMe} from "../../src/FundMe.sol";
@@ -20,8 +20,12 @@ contract InteractionsTest is Test {
     function setUp() public {
         // fundMe = new FundMe(0x694AA1769357215DE4FAC081bf1f309aDC325306);
         DeployFundMe deployFundMe = new DeployFundMe();
-        fundMe = deployFundMe.run();
+        (fundMe, ) = deployFundMe.run();
         vm.deal(USER, START_BALANCE); // Set the balance of USER to 10 ETH
+
+        console.log("InteractionsTest address is %s", address(this));
+        // InteractionsTest address is 0x7FA9385bE102ac3EAc297483Dd6233D62b3e1496
+        //  msg.sender is              0x7FA9385bE102ac3EAc297483Dd6233D62b3e1496
     }
 
     function testUserCanFundInteractions() public {
@@ -29,7 +33,7 @@ contract InteractionsTest is Test {
         FundFundMe fundFundMe = new FundFundMe();
         // fundMe.fund{value: SEND_VALUE}();
         fundFundMe.fundFundMe(address(fundMe));
-        // assertEq(address(fundMe).balance, 0.1 ether);
+        assertEq(address(fundMe).balance, 0.1 ether);
 
         WithdrawFundMe withdrawFundMe = new WithdrawFundMe();
         withdrawFundMe.withdrawFundMe(address(fundMe));

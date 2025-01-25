@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.18;
+pragma solidity ^0.8.28;
 
 import {Test, console} from "forge-std/Test.sol";
 import {FundMe} from "../../src/FundMe.sol";
@@ -21,7 +21,7 @@ contract FundMeTest is Test {
     function setUp() public {
         // fundMe = new FundMe(0x694AA1769357215DE4FAC081bf1f309aDC325306);
         DeployFundMe deployFundMe = new DeployFundMe();
-        fundMe = deployFundMe.run();
+        (fundMe, ) = deployFundMe.run();
         vm.deal(USER, START_BALANCE); // Set the balance of USER to 10 ETH
     }
 
@@ -97,11 +97,11 @@ contract FundMeTest is Test {
         uint256 startingFundMeBalance = address(fundMe).balance; // SEND_VALUE
 
         // act
-        uint256 gasStart = gasleft();
+        uint256 gasStart = gasleft(); // 1000
         vm.txGasPrice(GAS_PRICE); // Set the gas price to 1
         vm.prank(fundMe.getOwner());
-        fundMe.withdraw(); // Call withdraw() with 5 ETH
-        uint256 gasEnd = gasleft();
+        fundMe.withdraw(); // Call withdraw() with 5 ETH  // 200
+        uint256 gasEnd = gasleft(); // 800
         uint256 gasUsed = (gasStart - gasEnd) * tx.gasprice; // tx.gasprice is now 1
         console.log(gasUsed);
         // assert
@@ -109,10 +109,14 @@ contract FundMeTest is Test {
         uint256 endingFundMeBalance = address(fundMe).balance;
 
         assertEq(endingFundMeBalance, 0);
-        assertEq(startingOwnerBalance + startingFundMeBalance, endingOwnerBalance);
+        assertEq(
+            startingOwnerBalance + startingFundMeBalance,
+            endingOwnerBalance
+        );
     }
 
     function testWithDrawWithMultipleFunders() public funded {
+        // uint256 i = uint256(uint160(msg.sender));
         //  mock multiple funders funding the contract
         uint160 numberOfFunders = 10;
         uint160 startingFunderIndex = 1;
@@ -138,7 +142,10 @@ contract FundMeTest is Test {
 
         // assertEq(startingFundMeBalance, 1 ether);
         assertEq(endingFundMeBalance, 0);
-        assertEq(startingOwnerBalance + startingFundMeBalance, endingOwnerBalance);
+        assertEq(
+            startingOwnerBalance + startingFundMeBalance,
+            endingOwnerBalance
+        );
     }
 
     function testCheaperWithDrawWithMultipleFunders() public funded {
@@ -167,6 +174,9 @@ contract FundMeTest is Test {
 
         // assertEq(startingFundMeBalance, 1 ether);
         assertEq(endingFundMeBalance, 0);
-        assertEq(startingOwnerBalance + startingFundMeBalance, endingOwnerBalance);
+        assertEq(
+            startingOwnerBalance + startingFundMeBalance,
+            endingOwnerBalance
+        );
     }
 }

@@ -7,10 +7,10 @@ libs = ["lib"]
 remappings = ["@chainlink/contracts/=lib/chainlink-brownie-contracts/contracts/","foundry-devops/=lib/foundry-devops/"]
 
 
-# ffi = true 
+ffi = true 
 
 fs_permissions = [
     { access = "read", path = "./broadcast" },
     { access = "read", path = "./reports" },
 ]
-ffi = true
+# ffi = true
